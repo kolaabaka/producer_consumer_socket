@@ -33,7 +33,7 @@ public class Client
         OutputStream outputStream = outputSocket.getOutputStream();
         outputStream.write("HI".getBytes());
 
-        BufferedReader inputData = new BufferedReader(new InputStreamReader(outputSocket.getInputStream()));
+        InputStream inputData = outputSocket.getInputStream();
 
         System.out.println("Server spend message: " + inputData.read());
 
