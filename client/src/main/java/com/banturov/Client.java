@@ -1,41 +1,60 @@
 package com.banturov;
 
-import org.springframework.util.StringUtils;
+import com.banturov.stage.sending.StateMessage;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
-import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
 
 public class Client
 {
+    private static StateMessage stateMessage;
+    private static boolean initStage = true;
 
-    private static String port;
 
-    private static boolean checkPort(String port){
-        try{
-            Integer.parseInt(port);
-            return false;
-        } catch(Exception e){
-            return true;
+    private static void checkPort(String port) throws IOException {
+        boolean checkFlag = false;
+        while(!checkFlag) {
+            try {
+                Integer.parseInt(port);
+                checkFlag = true;
+            } catch (Exception e) {
+                System.out.println(e.getMessage() + "\nCHOOSE ANOTHER PORT");
+                BufferedReader inputAnotherPort = new BufferedReader(new InputStreamReader(System.in));
+                port = inputAnotherPort.readLine();
+            }
         }
     }
 
-    public static void main( String[] args ) throws IOException, InterruptedException {
+    public static void main( String[] args ) throws IOException, ClassNotFoundException {
         System.out.println("Input port number: ");
         BufferedReader inputPort = new BufferedReader(new InputStreamReader(System.in));
-        do {
-            port = inputPort.readLine();
-        } while(checkPort(port));
+
+        String port = inputPort.readLine();
+        checkPort(port);
 
         Socket outputSocket = new Socket("localhost", Integer.parseInt(port));
-        OutputStream outputStream = outputSocket.getOutputStream();
-        outputStream.write("HI".getBytes());
 
-        InputStream inputData = outputSocket.getInputStream();
-
-        System.out.println("Server spend message: " + inputData.read());
+        //Try to initialize session, while method finish successful
+        while(initStage) {
+            try {
+                stateMessage.identSession(outputSocket);
+                initStage = false;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+//        ObjectOutputStream outputStream = new ObjectOutputStream(outputSocket.getOutputStream());
+//        Message mesOutput = new Message(TypeMessage.INIT_USER,"Jojo" );
+//        outputStream.writeObject(mesOutput);
+//
+//        ObjectInputStream inputData = new ObjectInputStream(outputSocket.getInputStream());
+//        Message mesInput = (Message) inputData.readObject();
+        //Working method
+//        String text = new BufferedReader(
+//            new InputStreamReader(inputData, StandardCharsets.UTF_8))
+//            .lines()
+//            .collect(Collectors.joining("\n"));
+//        System.out.println("Server spend message: " + mesInput.Message);
 
         outputSocket.close();
     }
