@@ -15,12 +15,12 @@ public class StateMessage {
         ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
         ObjectInputStream inputData = new ObjectInputStream(socket.getInputStream());
 
-        outputStream.writeObject(new Message(TypeMessage.INIT_USER, "INIT ME"));
+        outputStream.writeObject(new Message(TypeMessage.INIT_USER, "Q"));
         Message answer = (Message) inputData.readObject();
+        System.out.println(answer.getMessage());
 
-        if(!answer.Type.equals(TypeMessage.OK)){
-            socket.close();
-            throw new SocketException(answer.Message);
+        if(!answer.getType().equals(TypeMessage.OK)){
+            throw new SocketException(answer.getMessage());
         }
     }
 }

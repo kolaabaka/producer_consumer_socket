@@ -10,5 +10,6 @@ public class Configuration {
     public Configuration() throws IOException {
         properties = new Properties();
         properties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
+        properties.put("server.client.port" ,System.getProperty("server.client.port"));
     }
 }

@@ -25,7 +25,7 @@ public class Client
         }
     }
 
-    public static void main( String[] args ) throws IOException, ClassNotFoundException {
+    public static void main( String[] args ) throws IOException {
         System.out.println("Input port number: ");
         BufferedReader inputPort = new BufferedReader(new InputStreamReader(System.in));
 
@@ -35,14 +35,14 @@ public class Client
         Socket outputSocket = new Socket("localhost", Integer.parseInt(port));
 
         //Try to initialize session, while method finish successful
-        while(initStage) {
+        //while(initStage) {
             try {
                 stateMessage.identSession(outputSocket);
                 initStage = false;
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-        }
+        //}
 //        ObjectOutputStream outputStream = new ObjectOutputStream(outputSocket.getOutputStream());
 //        Message mesOutput = new Message(TypeMessage.INIT_USER,"Jojo" );
 //        outputStream.writeObject(mesOutput);
